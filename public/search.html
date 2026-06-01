@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search - Alumni Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">A</div>
+      <div>
+        <div class="brand-title">Alumni</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <span>Dashboard</span>
+      </a>
+      <a href="add.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+        <span>Add Alumni</span>
+      </a>
+      <a href="view.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+        <span>View Records</span>
+      </a>
+      <a href="search.html" class="nav-item active">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+        <span>Search</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">DBMS Project 2025</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Search Alumni</h1>
+        <p class="page-desc">Find records by name, course, or graduation year.</p>
+      </div>
+    </header>
+
+    <div class="search-layout">
+      <div class="search-panel">
+        <div class="panel-header">Search Filters</div>
+
+        <div class="search-tabs">
+          <button class="stab active" onclick="setTab('name', this)">Name</button>
+          <button class="stab" onclick="setTab('course', this)">Course</button>
+          <button class="stab" onclick="setTab('year', this)">Year</button>
+        </div>
+
+        <div id="tab_name" class="tab-pane">
+          <div class="form-group">
+            <label class="form-label" for="s_name">Alumni Name</label>
+            <input type="text" id="s_name" class="form-input" placeholder="e.g. Khan Ahmed" />
+          </div>
+        </div>
+
+        <div id="tab_course" class="tab-pane hidden">
+          <div class="form-group">
+            <label class="form-label" for="s_course">Course Name</label>
+            <input type="text" id="s_course" class="form-input" placeholder="e.g. BCA, MCA" list="courseList2"/>
+            <datalist id="courseList2">
+              <option value="BCA"><option value="MCA"><option value="BCA-AI"><option value="B.Tech"><option value="M.Tech">
+            </datalist>
+          </div>
+        </div>
+
+        <div id="tab_year" class="tab-pane hidden">
+          <div class="form-group">
+            <label class="form-label" for="s_year">Graduation Year</label>
+            <input type="number" id="s_year" class="form-input" placeholder="e.g. 2025" min="1980" max="2030" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%; margin-top:18px;" onclick="runSearch()">Search</button>
+        <div id="searchSQL" class="logic-anchor"></div>
+      </div>
+
+      <div class="panel search-results">
+        <div class="panel-header">
+          <span>Search Results</span>
+          <span id="resultCount" class="badge"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="alumni-table">
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Email</th><th>Course</th><th>Year</th></tr>
+            </thead>
+            <tbody id="searchBody">
+              <tr><td colspan="5" class="empty-cell"><div class="empty-state"><span class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span><strong>Run a search to see results</strong></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    let activeTab = 'name';
+
+    function setTab(tab, el) {
+      activeTab = tab;
+      document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab_' + tab).classList.remove('hidden');
+      updateSearchSQL();
+    }
+
+    function updateSearchSQL() {
+      let sql = '';
+      if (activeTab === 'name') {
+        const v = document.getElementById('s_name').value || '...';
+        sql = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> alumni\n<span class="sql-kw">WHERE</span> name <span class="sql-kw">LIKE</span> <span class="sql-str">'%${v}%'</span>;`;
+      } else if (activeTab === 'course') {
+        const v = document.getElementById('s_course').value || '...';
+        sql = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> alumni\n<span class="sql-kw">WHERE</span> course = <span class="sql-str">'${v}'</span>;`;
+      } else {
+        const v = document.getElementById('s_year').value || '...';
+        sql = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> alumni\n<span class="sql-kw">WHERE</span> graduation_year = <span class="sql-num">${v}</span>;`;
+      }
+      document.getElementById('searchSQL').innerHTML = sql;
+    }
+
+    ['s_name','s_course','s_year'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateSearchSQL);
+    });
+
+    async function runSearch() {
+      const data = await fetchAlumni();
+      let results = data;
+
+      if (activeTab === 'name') {
+        const q = document.getElementById('s_name').value.toLowerCase();
+        results = data.filter(a => a.name.toLowerCase().includes(q));
+      } else if (activeTab === 'course') {
+        const q = document.getElementById('s_course').value.toLowerCase();
+        results = data.filter(a => (a.course||'').toLowerCase() === q);
+      } else {
+        const q = document.getElementById('s_year').value;
+        results = data.filter(a => String(a.graduation_year) === q);
+      }
+
+      const body = document.getElementById('searchBody');
+      document.getElementById('resultCount').textContent = results.length + ' found';
+
+      if (!results.length) {
+        body.innerHTML = `<tr><td colspan="5" class="empty-cell"><div class="empty-state"><span class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span><strong>No records found</strong></div></td></tr>`;
+        return;
+      }
+      body.innerHTML = results.map((a, i) => `
+        <tr class="table-row-anim" style="animation-delay:${i*0.04}s">
+          <td class="mono">${a.id}</td>
+          <td><strong>${a.name}</strong></td>
+          <td class="mono light">${a.email || '-'}</td>
+          <td><span class="badge">${a.course || '-'}</span></td>
+          <td class="mono">${a.graduation_year || '-'}</td>
+        </tr>`).join('');
+    }
+  </script>
+</body>
+</html>

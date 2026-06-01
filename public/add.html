@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Alumni - Alumni Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">A</div>
+      <div>
+        <div class="brand-title">Alumni</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <span>Dashboard</span>
+      </a>
+      <a href="add.html" class="nav-item active">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+        <span>Add Alumni</span>
+      </a>
+      <a href="view.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+        <span>View Records</span>
+      </a>
+      <a href="search.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+        <span>Search</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">DBMS Project 2025</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Add Alumni</h1>
+        <p class="page-desc">Create a new alumni profile with course, contact, and graduation details.</p>
+      </div>
+    </header>
+
+    <div class="form-layout">
+      <div class="form-panel">
+        <div class="panel-header">Alumni Details</div>
+
+        <div id="formAlert" class="form-alert hidden"></div>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label class="form-label" for="f_name">Full Name <span class="required">*</span></label>
+            <input type="text" id="f_name" class="form-input" placeholder="e.g. Khan Ahmed" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f_email">Email Address</label>
+            <input type="email" id="f_email" class="form-input" placeholder="e.g. khan@gmail.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f_phone">Phone Number</label>
+            <input type="tel" id="f_phone" class="form-input" placeholder="e.g. 9876543210" maxlength="15" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f_course">Course <span class="required">*</span></label>
+            <input type="text" id="f_course" class="form-input" placeholder="e.g. BCA, MCA, B.Tech" list="courseList" />
+            <datalist id="courseList">
+              <option value="BCA">
+              <option value="MCA">
+              <option value="BCA-AI">
+              <option value="B.Tech">
+              <option value="M.Tech">
+              <option value="B.Sc">
+              <option value="M.Sc">
+              <option value="BBA">
+              <option value="MBA">
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f_year">Graduation Year <span class="required">*</span></label>
+            <input type="number" id="f_year" class="form-input" placeholder="e.g. 2025" min="1980" max="2030" />
+          </div>
+        </div>
+
+        <div id="sqlPreview" class="logic-anchor"></div>
+
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+          <button class="btn btn-primary" onclick="submitAlumni()">Save Alumni</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // Kept for the existing input listeners; preview output is intentionally hidden.
+    ['f_name','f_email','f_phone','f_course','f_year'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateSQLPreview);
+    });
+
+    function updateSQLPreview() {
+      const n = document.getElementById('f_name').value || '...';
+      const e = document.getElementById('f_email').value || '...';
+      const p = document.getElementById('f_phone').value || '...';
+      const c = document.getElementById('f_course').value || '...';
+      const y = document.getElementById('f_year').value || '...';
+      document.getElementById('sqlPreview').innerHTML =
+        `<span class="sql-kw">INSERT INTO</span> alumni\n  (name, email, phone, course, graduation_year)\n<span class="sql-kw">VALUES</span>\n  (<span class="sql-str">'${n}'</span>, <span class="sql-str">'${e}'</span>, <span class="sql-str">'${p}'</span>, <span class="sql-str">'${c}'</span>, <span class="sql-num">${y}</span>);`;
+    }
+  </script>
+</body>
+</html>

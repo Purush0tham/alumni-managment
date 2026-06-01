@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alumni Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">A</div>
+      <div>
+        <div class="brand-title">Alumni</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item active">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <span>Dashboard</span>
+      </a>
+      <a href="add.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+        <span>Add Alumni</span>
+      </a>
+      <a href="view.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+        <span>View Records</span>
+      </a>
+      <a href="search.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+        <span>Search</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">DBMS Project 2025</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-desc">A clean overview of alumni records, courses, batches, and recent activity.</p>
+      </div>
+      <div class="topbar-right">
+        <div class="db-status">
+          <span class="status-dot"></span>
+          <span>MySQL Connected</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card" style="--delay:0s">
+        <div class="stat-top">
+          <div class="stat-label">Total Alumni</div>
+          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        </div>
+        <div class="stat-value" id="totalCount">-</div>
+        <div class="stat-footnote">Registered records</div>
+      </div>
+      <div class="stat-card" style="--delay:0.05s">
+        <div class="stat-top">
+          <div class="stat-label">Courses</div>
+          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div>
+        </div>
+        <div class="stat-value" id="courseCount">-</div>
+        <div class="stat-footnote">Unique programs</div>
+      </div>
+      <div class="stat-card" style="--delay:0.1s">
+        <div class="stat-top">
+          <div class="stat-label">Latest Batch</div>
+          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg></div>
+        </div>
+        <div class="stat-value" id="latestYear">-</div>
+        <div class="stat-footnote">Graduation year</div>
+      </div>
+      <div class="stat-card" style="--delay:0.15s">
+        <div class="stat-top">
+          <div class="stat-label">Recent Additions</div>
+          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>
+        </div>
+        <div class="stat-value" id="weekCount">-</div>
+        <div class="stat-footnote">Newest records</div>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <div class="panel quick-actions">
+        <div class="panel-header">Quick Actions</div>
+        <div class="action-list">
+          <a href="add.html" class="action-btn action-primary">
+            <span class="action-icon">+</span>
+            <div>
+              <div class="action-title">Add New Alumni</div>
+              <div class="action-sub">Register a new record</div>
+            </div>
+          </a>
+          <a href="view.html" class="action-btn">
+            <span class="action-icon">#</span>
+            <div>
+              <div class="action-title">View All Records</div>
+              <div class="action-sub">Browse the full alumni list</div>
+            </div>
+          </a>
+          <a href="search.html" class="action-btn">
+            <span class="action-icon">S</span>
+            <div>
+              <div class="action-title">Search Alumni</div>
+              <div class="action-sub">Filter by name, course, or year</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="panel recent-panel">
+        <div class="panel-header">
+          <span>Recent Entries</span>
+          <a href="view.html" class="panel-link">View all</a>
+        </div>
+        <div class="table-wrap">
+          <table class="alumni-table" id="recentTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recentBody">
+              <tr><td colspan="5" class="empty-cell">Loading records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    loadDashboard();
+  </script>
+</body>
+</html>

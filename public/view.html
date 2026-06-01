@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Records - Alumni Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">A</div>
+      <div>
+        <div class="brand-title">Alumni</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <span>Dashboard</span>
+      </a>
+      <a href="add.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+        <span>Add Alumni</span>
+      </a>
+      <a href="view.html" class="nav-item active">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
+        <span>View Records</span>
+      </a>
+      <a href="search.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+        <span>Search</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">DBMS Project 2025</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">All Records</h1>
+        <p class="page-desc">Full alumni database with <span id="recordCount">0</span> entries.</p>
+      </div>
+      <div class="topbar-right">
+        <a href="add.html" class="btn btn-primary btn-sm">Add New</a>
+      </div>
+    </header>
+
+    <div class="filter-bar">
+      <input type="text" id="filterInput" class="form-input filter-input" placeholder="Search by name, course, or year..." oninput="filterTable()" />
+      <select id="filterCourse" class="form-input filter-select" onchange="filterTable()">
+        <option value="">All Courses</option>
+      </select>
+      <select id="filterYear" class="form-input filter-select" onchange="filterTable()">
+        <option value="">All Years</option>
+      </select>
+    </div>
+
+    <div id="viewAlert" class="form-alert hidden" style="margin: 20px 32px 0;"></div>
+
+    <div class="panel records-panel">
+      <div class="panel-header">Records</div>
+      <div class="table-wrap">
+        <table class="alumni-table" id="mainTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Course</th>
+              <th>Grad Year</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="mainTableBody">
+            <tr><td colspan="7" class="empty-cell">Loading records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Edit Alumni</div>
+          <button class="modal-close" onclick="closeModal()" aria-label="Close">x</button>
+        </div>
+        <input type="hidden" id="edit_id" />
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label class="form-label" for="edit_name">Full Name</label>
+            <input type="text" id="edit_name" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_email">Email</label>
+            <input type="email" id="edit_email" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_phone">Phone</label>
+            <input type="tel" id="edit_phone" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_course">Course</label>
+            <input type="text" id="edit_course" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit_year">Graduation Year</label>
+            <input type="number" id="edit_year" class="form-input" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveEdit()">Update Record</button>
+        </div>
+        <div class="logic-anchor" id="editSqlPreview"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    let allRecords = [];
+
+    async function loadView() {
+      const data = await fetchAlumni();
+      allRecords = data;
+      renderTable(data);
+      populateFilters(data);
+      document.getElementById('recordCount').textContent = data.length;
+    }
+
+    function renderTable(data) {
+      const body = document.getElementById('mainTableBody');
+      if (!data.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty-cell"><div class="empty-state"><span class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span><strong>No records found</strong></div></td></tr>`;
+        return;
+      }
+      body.innerHTML = data.map((a, i) => `
+        <tr class="table-row-anim" style="animation-delay:${i * 0.04}s">
+          <td class="mono">${a.id}</td>
+          <td><strong>${a.name}</strong></td>
+          <td class="mono light">${a.email || '-'}</td>
+          <td class="mono light">${a.phone || '-'}</td>
+          <td><span class="badge">${a.course || '-'}</span></td>
+          <td class="mono">${a.graduation_year || '-'}</td>
+          <td>
+            <div class="action-row">
+              <button class="tbl-btn tbl-edit" onclick="openEdit(${JSON.stringify(a).replace(/"/g, '&quot;')})">Edit</button>
+              <button class="tbl-btn tbl-del" onclick="deleteAlumni(${a.id})">Delete</button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    function populateFilters(data) {
+      const courses = [...new Set(data.map(a => a.course).filter(Boolean))].sort();
+      const years = [...new Set(data.map(a => a.graduation_year).filter(Boolean))].sort((a,b)=>b-a);
+      const cs = document.getElementById('filterCourse');
+      const ys = document.getElementById('filterYear');
+      courses.forEach(c => { const o = document.createElement('option'); o.value=c; o.textContent=c; cs.appendChild(o); });
+      years.forEach(y => { const o = document.createElement('option'); o.value=y; o.textContent=y; ys.appendChild(o); });
+    }
+
+    function filterTable() {
+      const q = document.getElementById('filterInput').value.toLowerCase();
+      const course = document.getElementById('filterCourse').value;
+      const year = document.getElementById('filterYear').value;
+      const filtered = allRecords.filter(a =>
+        (!q || a.name.toLowerCase().includes(q) || (a.course||'').toLowerCase().includes(q) || String(a.graduation_year).includes(q)) &&
+        (!course || a.course === course) &&
+        (!year || String(a.graduation_year) === year)
+      );
+      renderTable(filtered);
+    }
+
+    function openEdit(a) {
+      document.getElementById('edit_id').value = a.id;
+      document.getElementById('edit_name').value = a.name;
+      document.getElementById('edit_email').value = a.email || '';
+      document.getElementById('edit_phone').value = a.phone || '';
+      document.getElementById('edit_course').value = a.course || '';
+      document.getElementById('edit_year').value = a.graduation_year || '';
+      updateEditSQL();
+      document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function updateEditSQL() {
+      const id = document.getElementById('edit_id').value;
+      const c = document.getElementById('edit_course').value || '...';
+      const y = document.getElementById('edit_year').value || '...';
+      document.getElementById('editSqlPreview').innerHTML =
+        `<span class="sql-kw">UPDATE</span> alumni\n<span class="sql-kw">SET</span> course = <span class="sql-str">'${c}'</span>, graduation_year = <span class="sql-num">${y}</span>\n<span class="sql-kw">WHERE</span> id = <span class="sql-num">${id}</span>;`;
+    }
+
+    ['edit_name','edit_email','edit_phone','edit_course','edit_year'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateEditSQL);
+    });
+
+    function closeModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    async function saveEdit() {
+      const id = document.getElementById('edit_id').value;
+      const payload = {
+        name: document.getElementById('edit_name').value,
+        email: document.getElementById('edit_email').value,
+        phone: document.getElementById('edit_phone').value,
+        course: document.getElementById('edit_course').value,
+        graduation_year: document.getElementById('edit_year').value
+      };
+      const ok = await updateAlumni(id, payload);
+      if (ok) { closeModal(); loadView(); showAlert('viewAlert','Record updated successfully.','success'); }
+      else showAlert('viewAlert','Update failed. Check server.','error');
+    }
+
+    async function deleteAlumni(id) {
+      if (!confirm(`Delete alumni record #${id}? This cannot be undone.`)) return;
+      const ok = await removeAlumni(id);
+      if (ok) { loadView(); showAlert('viewAlert',`Record #${id} deleted.`,'success'); }
+      else showAlert('viewAlert','Delete failed. Check server.','error');
+    }
+
+    loadView();
+  </script>
+</body>
+</html>
