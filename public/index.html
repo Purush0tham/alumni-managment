@@ -2,148 +2,300 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alumni Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-icon">A</div>
-      <div>
-        <div class="brand-title">Alumni</div>
-        <div class="brand-sub">Management System</div>
-      </div>
+    <div class="brand">
+      <div class="brand-title">Alumni MS</div>
+      <div class="brand-subtitle">Admin Panel</div>
     </div>
-    <nav class="sidebar-nav">
-      <a href="index.html" class="nav-item active">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
-        <span>Dashboard</span>
-      </a>
-      <a href="add.html" class="nav-item">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
-        <span>Add Alumni</span>
-      </a>
-      <a href="view.html" class="nav-item">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></span>
-        <span>View Records</span>
-      </a>
-      <a href="search.html" class="nav-item">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
-        <span>Search</span>
-      </a>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <button class="nav-item active" data-page="dashboard" type="button">Dashboard</button>
+      <button class="nav-item" data-page="records" type="button">All Records</button>
+      <button class="nav-item" data-page="add" type="button">Add Alumni</button>
+      <button class="nav-item" data-page="search" type="button">Search</button>
     </nav>
+
     <div class="sidebar-footer">
-      <div class="sidebar-footer-text">DBMS Project 2025</div>
+      <span id="connectionDot" class="connection-dot is-pending"></span>
+      <span>alumni_db · MySQL</span>
     </div>
   </aside>
 
-  <main class="main">
+  <main class="app-shell">
     <header class="topbar">
-      <div class="topbar-left">
-        <h1 class="page-title">Dashboard</h1>
-        <p class="page-desc">A clean overview of alumni records, courses, batches, and recent activity.</p>
-      </div>
-      <div class="topbar-right">
-        <div class="db-status">
-          <span class="status-dot"></span>
-          <span>MySQL Connected</span>
-        </div>
+      <div id="topbarTitle" class="topbar-title">Dashboard</div>
+      <div class="topbar-actions">
+        <input id="globalSearch" class="input global-search" type="search" placeholder="Global search" />
       </div>
     </header>
 
-    <section class="stats-grid">
-      <div class="stat-card" style="--delay:0s">
-        <div class="stat-top">
-          <div class="stat-label">Total Alumni</div>
-          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+    <section class="content">
+      <div id="page-dashboard" class="page">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div id="statTotal" class="stat-number">0</div>
+            <div class="stat-label">total alumni</div>
+            <h2>Total Alumni</h2>
+          </article>
+          <article class="stat-card">
+            <div id="statCourses" class="stat-number">0</div>
+            <div class="stat-label">degree programs</div>
+            <h2>Total Courses</h2>
+          </article>
+          <article class="stat-card">
+            <div id="statDepartments" class="stat-number">0</div>
+            <div class="stat-label">departments</div>
+            <h2>Total Departments</h2>
+          </article>
+          <article class="stat-card">
+            <div id="statLatestYear" class="stat-number">-</div>
+            <div class="stat-label">latest batch</div>
+            <h2>Latest Graduation</h2>
+          </article>
         </div>
-        <div class="stat-value" id="totalCount">-</div>
-        <div class="stat-footnote">Registered records</div>
-      </div>
-      <div class="stat-card" style="--delay:0.05s">
-        <div class="stat-top">
-          <div class="stat-label">Courses</div>
-          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div>
-        </div>
-        <div class="stat-value" id="courseCount">-</div>
-        <div class="stat-footnote">Unique programs</div>
-      </div>
-      <div class="stat-card" style="--delay:0.1s">
-        <div class="stat-top">
-          <div class="stat-label">Latest Batch</div>
-          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg></div>
-        </div>
-        <div class="stat-value" id="latestYear">-</div>
-        <div class="stat-footnote">Graduation year</div>
-      </div>
-      <div class="stat-card" style="--delay:0.15s">
-        <div class="stat-top">
-          <div class="stat-label">Recent Additions</div>
-          <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>
-        </div>
-        <div class="stat-value" id="weekCount">-</div>
-        <div class="stat-footnote">Newest records</div>
-      </div>
-    </section>
 
-    <section class="lower-grid">
-      <div class="panel quick-actions">
-        <div class="panel-header">Quick Actions</div>
-        <div class="action-list">
-          <a href="add.html" class="action-btn action-primary">
-            <span class="action-icon">+</span>
-            <div>
-              <div class="action-title">Add New Alumni</div>
-              <div class="action-sub">Register a new record</div>
+        <div class="dashboard-grid">
+          <article id="deptChartCard" class="card chart-card">
+            <div class="card-header">
+              <h2>Alumni by Department</h2>
             </div>
-          </a>
-          <a href="view.html" class="action-btn">
-            <span class="action-icon">#</span>
-            <div>
-              <div class="action-title">View All Records</div>
-              <div class="action-sub">Browse the full alumni list</div>
+            <div class="chart-shell">
+              <canvas id="deptChart" aria-label="Alumni by Department chart" role="img"></canvas>
             </div>
-          </a>
-          <a href="search.html" class="action-btn">
-            <span class="action-icon">S</span>
-            <div>
-              <div class="action-title">Search Alumni</div>
-              <div class="action-sub">Filter by name, course, or year</div>
+            <div id="deptLegend" class="legend-grid"></div>
+          </article>
+
+          <article id="yearChartCard" class="card chart-card">
+            <div class="card-header">
+              <h2>Graduation Year Distribution</h2>
             </div>
-          </a>
+            <div class="chart-shell">
+              <canvas id="yearChart" aria-label="Graduation Year Distribution chart" role="img"></canvas>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-bottom">
+          <article id="courseChartCard" class="card chart-card">
+            <div class="card-header">
+              <h2>Alumni by Course</h2>
+            </div>
+            <div class="chart-shell">
+              <canvas id="courseChart" aria-label="Alumni by Course chart" role="img"></canvas>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-bottom">
+          <article class="card">
+            <div class="card-header">
+              <h2>Recent Alumni Records</h2>
+            </div>
+            <div id="recentRecords" class="records-preview"></div>
+          </article>
         </div>
       </div>
 
-      <div class="panel recent-panel">
-        <div class="panel-header">
-          <span>Recent Entries</span>
-          <a href="view.html" class="panel-link">View all</a>
+      <div id="page-records" class="page hidden">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input id="recordFilter" class="input" type="search" placeholder="Search records" />
+          </div>
+          <div class="toolbar-right">
+            <select id="courseFilter" class="input select-input">
+              <option value="">All courses</option>
+            </select>
+            <select id="yearFilter" class="input select-input">
+              <option value="">All years</option>
+            </select>
+            <button id="exportBtn" class="btn btn-secondary" type="button">Export CSV</button>
+          </div>
         </div>
-        <div class="table-wrap">
-          <table class="alumni-table" id="recentTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Year</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="recentBody">
-              <tr><td colspan="5" class="empty-cell">Loading records...</td></tr>
-            </tbody>
-          </table>
+
+        <article class="card table-card">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>USN</th>
+                  <th>Name</th>
+                  <th>Course</th>
+                  <th>Department</th>
+                  <th>Graduation</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>City</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+
+      <div id="page-add" class="page hidden">
+        <article class="card form-card">
+          <div class="card-header">
+            <h2>Add Alumni Record</h2>
+          </div>
+          <div id="addBanner" class="banner hidden"></div>
+          <form id="addForm" novalidate>
+            <div class="form-grid">
+              <label class="field">
+                <span>USN</span>
+                <input id="usnInput" class="input" name="usn" type="text" placeholder="e.g., 4NM19CS001" />
+                <small class="field-error" data-error-for="usn"></small>
+              </label>
+              <label class="field full-field">
+                <span>Full Name *</span>
+                <input id="nameInput" class="input" name="name" type="text" autocomplete="name" />
+                <small class="field-error" data-error-for="name"></small>
+              </label>
+              <label class="field">
+                <span>Email Address</span>
+                <input id="emailInput" class="input" name="email" type="email" autocomplete="email" />
+                <small class="field-error" data-error-for="email"></small>
+              </label>
+              <label class="field">
+                <span>Phone Number</span>
+                <input id="phoneInput" class="input" name="phone" type="tel" autocomplete="tel" />
+                <small class="field-error" data-error-for="phone"></small>
+              </label>
+              <label class="field">
+                <span>Course *</span>
+                <select id="courseInput" class="input select-input" name="course">
+                  <option value="">Select a course</option>
+                  <option value="BE">BE</option>
+                  <option value="BTech">B.Tech</option>
+                  <option value="MTech">M.Tech</option>
+                  <option value="MCA">MCA</option>
+                  <option value="MBA">MBA</option>
+                </select>
+                <small class="field-error" data-error-for="course"></small>
+              </label>
+              <label class="field">
+                <span>Department *</span>
+                <select id="departmentInput" class="input select-input" name="department">
+                  <option value="">Select department first</option>
+                </select>
+                <small class="field-error" data-error-for="department"></small>
+              </label>
+              <label class="field">
+                <span>Graduation Year *</span>
+                <select id="yearInput" class="input select-input" name="graduation_year">
+                  <option value="">Select year</option>
+                </select>
+                <small class="field-error" data-error-for="graduation_year"></small>
+              </label>
+              <label class="field">
+                <span>City</span>
+                <input id="cityInput" class="input" name="city" type="text" placeholder="e.g., Bangalore" />
+                <small class="field-error" data-error-for="city"></small>
+              </label>
+            </div>
+            <div class="button-row">
+              <button id="clearFormBtn" class="btn btn-secondary" type="button">Clear</button>
+              <button class="btn btn-primary" type="submit">Save Alumni</button>
+            </div>
+          </form>
+        </article>
+      </div>
+
+      <div id="page-search" class="page hidden">
+        <div class="search-grid">
+          <article class="card search-card">
+            <div class="card-header">
+              <h2>Search & Filter</h2>
+            </div>
+            <div class="search-filters">
+              <label class="field">
+                <span>Name</span>
+                <input id="searchName" class="input" type="text" placeholder="Search by name" />
+              </label>
+              <label class="field">
+                <span>USN</span>
+                <input id="searchUSN" class="input" type="text" placeholder="Search by USN" />
+              </label>
+              <label class="field">
+                <span>Course</span>
+                <select id="searchCourse" class="input select-input">
+                  <option value="">All courses</option>
+                  <option value="BE">BE</option>
+                  <option value="BTech">B.Tech</option>
+                  <option value="MTech">M.Tech</option>
+                  <option value="MCA">MCA</option>
+                  <option value="MBA">MBA</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Department</span>
+                <select id="searchDepartment" class="input select-input">
+                  <option value="">All departments</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Year</span>
+                <select id="searchYear" class="input select-input">
+                  <option value="">All years</option>
+                </select>
+              </label>
+            </div>
+            <button id="searchBtn" class="btn btn-primary full-button" type="button">Search</button>
+          </article>
+
+          <article class="card table-card">
+            <div class="card-header with-meta">
+              <h2>Search Results</h2>
+              <span id="searchCount" class="result-count">0 records found</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                  </tr>
+                </thead>
+                <tbody id="searchBody">
+                  <tr>
+                    <td class="empty-cell" colspan="5">Run a search to see results</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="app.js"></script>
-  <script>
-    loadDashboard();
-  </script>
+  <div id="chartTooltip" class="chart-tooltip"></div>
+  <div id="toastRoot" class="toast-root"></div>
+
+  <div id="deleteModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="modal">
+      <h2 id="deleteTitle">Delete Record?</h2>
+      <p>This action cannot be undone.</p>
+      <div class="button-row">
+        <button id="cancelDeleteBtn" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="confirmDeleteBtn" class="btn btn-danger" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="app-new.js"></script>
 </body>
 </html>
