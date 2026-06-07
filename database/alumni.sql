@@ -28,3 +28,35 @@ create trigger set_alumni_updated_at
 before update on public.alumni
 for each row
 execute function public.set_updated_at();
+
+alter table public.alumni enable row level security;
+
+drop policy if exists "Allow anon read alumni" on public.alumni;
+drop policy if exists "Allow anon insert alumni" on public.alumni;
+drop policy if exists "Allow anon update alumni" on public.alumni;
+drop policy if exists "Allow anon delete alumni" on public.alumni;
+
+create policy "Allow anon read alumni"
+on public.alumni
+for select
+to anon
+using (true);
+
+create policy "Allow anon insert alumni"
+on public.alumni
+for insert
+to anon
+with check (true);
+
+create policy "Allow anon update alumni"
+on public.alumni
+for update
+to anon
+using (true)
+with check (true);
+
+create policy "Allow anon delete alumni"
+on public.alumni
+for delete
+to anon
+using (true);
