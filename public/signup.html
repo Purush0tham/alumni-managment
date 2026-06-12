@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account | Alumni Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-start: #0F172A;
+      --bg-mid: #1E293B;
+      --card: rgba(255, 255, 255, 0.96);
+      --text: #0F172A;
+      --muted: #64748B;
+      --border: #CBD5E1;
+      --blue: #3B82F6;
+      --blue-hover: #2563EB;
+      --danger: #DC2626;
+      --danger-bg: #FEF2F2;
+      --danger-border: #FECACA;
+      --success: #15803D;
+      --success-bg: #F0FDF4;
+      --success-border: #BBF7D0;
+      --warning: #F97316;
+      --weak: #DC2626;
+      --medium: #EAB308;
+      --strong: #16A34A;
+      --focus-ring: rgba(59, 130, 246, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Plus Jakarta Sans", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+      overflow-x: hidden;
+    }
+
+    .page-shell {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+      isolation: isolate;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(96, 165, 250, 0.34), rgba(99, 102, 241, 0.06) 62%, transparent 72%);
+      filter: blur(4px);
+      opacity: 0.7;
+      z-index: -1;
+      animation: floatOrb 16s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    .orb-one {
+      width: 280px;
+      height: 280px;
+      top: 8%;
+      left: 10%;
+    }
+
+    .orb-two {
+      width: 220px;
+      height: 220px;
+      right: 12%;
+      bottom: 10%;
+      animation-duration: 18s;
+      animation-delay: -5s;
+    }
+
+    .orb-three {
+      width: 160px;
+      height: 160px;
+      right: 24%;
+      top: 18%;
+      animation-duration: 20s;
+      animation-delay: -9s;
+      opacity: 0.55;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 48px;
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      animation: cardIn 400ms ease-out both;
+    }
+
+    .brand {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .logo-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--blue);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(59, 130, 246, 0.35);
+    }
+
+    .system-name {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1,
+    p {
+      margin: 0;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .heading h1 {
+      font-size: 28px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .heading p {
+      margin-top: 8px;
+      color: var(--warning);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #FFFFFF;
+      color: var(--text);
+      font: inherit;
+      padding: 0 14px;
+      outline: none;
+      transition: border-color 200ms ease, box-shadow 200ms ease;
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 48px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 200ms ease, color 200ms ease;
+    }
+
+    .toggle-password:hover {
+      background: #EFF6FF;
+      color: var(--blue-hover);
+    }
+
+    .strength {
+      display: grid;
+      gap: 7px;
+      margin-top: 2px;
+    }
+
+    .strength-track {
+      height: 7px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--weak);
+      transition: width 200ms ease, background 200ms ease;
+    }
+
+    .strength-label {
+      min-height: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .field-error {
+      min-height: 16px;
+      color: var(--danger);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 48px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--blue);
+      color: #FFFFFF;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 200ms ease, transform 200ms ease, opacity 200ms ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--blue-hover);
+      transform: scale(1.01);
+    }
+
+    .submit-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.78;
+      transform: none;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      display: none;
+      animation: spin 800ms linear infinite;
+    }
+
+    .submit-btn.is-loading .spinner {
+      display: block;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .message.is-visible {
+      display: block;
+    }
+
+    .error-message {
+      border: 1px solid var(--danger-border);
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .success-message {
+      border: 1px solid var(--success-border);
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .bottom-text {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .bottom-text a {
+      color: var(--blue-hover);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .bottom-text a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatOrb {
+      from {
+        transform: translate3d(-18px, 12px, 0) scale(1);
+      }
+      to {
+        transform: translate3d(22px, -24px, 0) scale(1.08);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page-shell {
+        padding: 24px 16px;
+      }
+
+      .auth-card {
+        max-width: 420px;
+        padding: 34px 24px;
+      }
+
+      .orb-one {
+        left: -90px;
+      }
+
+      .orb-two {
+        right: -70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <div class="orb orb-one" aria-hidden="true"></div>
+    <div class="orb orb-two" aria-hidden="true"></div>
+    <div class="orb orb-three" aria-hidden="true"></div>
+
+    <section class="auth-card" aria-label="Create account form">
+      <div class="brand">
+        <div class="logo-badge">A</div>
+        <p class="system-name">Alumni Management System</p>
+      </div>
+
+      <div class="heading">
+        <h1>Create Account</h1>
+        <p>Administrator access only</p>
+      </div>
+
+      <form id="signupForm" novalidate>
+        <label>
+          Full Name
+          <input id="nameInput" type="text" autocomplete="name" required />
+          <span id="nameError" class="field-error"></span>
+        </label>
+        <label>
+          Email Address
+          <input id="emailInput" type="email" autocomplete="email" required />
+          <span id="emailError" class="field-error"></span>
+        </label>
+        <label>
+          Password
+          <span class="password-wrap">
+            <input id="passwordInput" type="password" autocomplete="new-password" required />
+            <button id="togglePassword" class="toggle-password" type="button" aria-label="Show password">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <span class="strength" aria-live="polite">
+            <span class="strength-track"><span id="strengthBar" class="strength-bar"></span></span>
+            <span id="strengthLabel" class="strength-label"></span>
+          </span>
+          <span id="passwordError" class="field-error"></span>
+        </label>
+        <label>
+          Confirm Password
+          <input id="confirmPasswordInput" type="password" autocomplete="new-password" required />
+          <span id="confirmPasswordError" class="field-error"></span>
+        </label>
+        <div id="errorMessage" class="message error-message"></div>
+        <div id="successMessage" class="message success-message"></div>
+        <button id="submitBtn" class="submit-btn" type="submit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span id="submitText">Create Account</span>
+        </button>
+      </form>
+
+      <p class="bottom-text">Already have an account? <a href="login.html">Sign in</a></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    // NOTE: Email confirmation is disabled in Supabase dashboard
+    // Authentication > Sign In / Providers > Confirm email: OFF
+    // Accounts are active immediately after signup.
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const form = document.getElementById('signupForm');
+      const nameInput = document.getElementById('nameInput');
+      const emailInput = document.getElementById('emailInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+      const togglePassword = document.getElementById('togglePassword');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthLabel = document.getElementById('strengthLabel');
+      const errors = {
+        name: document.getElementById('nameError'),
+        email: document.getElementById('emailError'),
+        password: document.getElementById('passwordError'),
+        confirmPassword: document.getElementById('confirmPasswordError')
+      };
+
+      function passwordStrength(password) {
+        if (!password) return { label: '', width: '0', color: 'var(--weak)' };
+        if (password.length < 8) return { label: 'Weak', width: '33%', color: 'var(--weak)' };
+        if (/[0-9\W_]/.test(password)) return { label: 'Strong', width: '100%', color: 'var(--strong)' };
+        return { label: 'Medium', width: '66%', color: 'var(--medium)' };
+      }
+
+      function updateStrength() {
+        const strength = passwordStrength(passwordInput.value);
+        strengthBar.style.width = strength.width;
+        strengthBar.style.background = strength.color;
+        strengthLabel.textContent = strength.label;
+      }
+
+      function clearMessages() {
+        Object.values(errors).forEach((el) => {
+          el.textContent = '';
+        });
+        errorMessage.classList.remove('is-visible');
+        successMessage.classList.remove('is-visible');
+      }
+
+      togglePassword.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        togglePassword.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+      });
+
+      passwordInput.addEventListener('input', updateStrength);
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearMessages();
+
+        const fullName = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        let valid = true;
+
+        if (!fullName) {
+          errors.name.textContent = 'Full name is required.';
+          valid = false;
+        }
+
+        if (!email) {
+          errors.email.textContent = 'Email address is required.';
+          valid = false;
+        }
+
+        if (password.length < 8) {
+          errors.password.textContent = 'Password must be at least 8 characters.';
+          valid = false;
+        }
+
+        if (password !== confirmPassword) {
+          errors.confirmPassword.textContent = 'Passwords do not match.';
+          valid = false;
+        }
+
+        if (!valid) return;
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add('is-loading');
+        submitText.textContent = 'Creating Account';
+
+        const { error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: fullName } }
+        });
+
+        if (error) {
+          errorMessage.textContent = error.message;
+          errorMessage.classList.add('is-visible');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('is-loading');
+          submitText.textContent = 'Create Account';
+          return;
+        }
+
+        await supabaseClient.auth.signOut();
+        successMessage.textContent = 'Account created successfully! Redirecting to login page...';
+        successMessage.classList.add('is-visible');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

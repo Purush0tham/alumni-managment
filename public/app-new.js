@@ -32,6 +32,7 @@ let dashboardStats = {};
 let currentPage = "dashboard";
 let pendingDeleteId = null;
 let chartLoadWarningShown = false;
+let currentSession = null;
 
 const chartInstances = {
   department: null,
@@ -43,7 +44,34 @@ const els = {};
 
 // ===== INITIALIZATION =====
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
+  currentSession = session;
+
+  const userEmailEl = document.getElementById('userEmail');
+  if (userEmailEl && session.user?.email) {
+    userEmailEl.textContent = session.user.email;
+  }
+
+  const email = session.user?.email || '';
+  const userAvatarEl = document.getElementById('userAvatar');
+  const userEmailDisplayEl = document.getElementById('userEmailDisplay');
+  if (userAvatarEl && email) {
+    userAvatarEl.textContent = email[0].toUpperCase();
+  }
+  if (userEmailDisplayEl && email) {
+    userEmailDisplayEl.textContent = email;
+  }
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentSession = session;
+    if (!session) window.location.href = 'login.html';
+  });
+
   cacheElements();
   populateGraduationYears();
   bindEvents();
@@ -120,6 +148,35 @@ function populateGraduationYears() {
 }
 
 function bindEvents() {
+  const accountMenuBtn = document.getElementById('accountMenuBtn');
+  const accountDropdown = document.getElementById('accountDropdown');
+  const signOutBtn = document.getElementById('signOutBtn');
+
+  if (accountMenuBtn && accountDropdown) {
+    accountMenuBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = !accountDropdown.classList.contains('hidden');
+      accountDropdown.classList.toggle('hidden', isOpen);
+      accountMenuBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    accountDropdown.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener('click', () => {
+      accountDropdown.classList.add('hidden');
+      accountMenuBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+    });
+  }
+
   // Navigation
   els.navItems.forEach((item) => {
     item.addEventListener("click", () => navigate(item.dataset.page));
@@ -173,11 +230,20 @@ function navigate(pageName) {
 async function apiFetch(url, options = {}) {
   try {
     const res = await fetch(url, {
-      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${currentSession?.access_token || ''}`,
+        ...(options.headers || {})
+      },
       ...options
     });
 
     const text = await res.text();
+    if (res.status === 401) {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+      return;
+    }
     let data = null;
 
     if (text) {

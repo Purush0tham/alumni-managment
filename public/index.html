@@ -12,20 +12,71 @@
 <body>
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-title">Alumni MS</div>
-      <div class="brand-subtitle">Admin Panel</div>
+      <div class="brand-avatar">A</div>
+      <div class="brand-copy">
+        <div class="brand-title">Alumni MS</div>
+        <div class="brand-subtitle">Admin Panel</div>
+      </div>
     </div>
 
     <nav class="nav" aria-label="Primary navigation">
-      <button class="nav-item active" data-page="dashboard" type="button">Dashboard</button>
-      <button class="nav-item" data-page="records" type="button">All Records</button>
-      <button class="nav-item" data-page="add" type="button">Add Alumni</button>
-      <button class="nav-item" data-page="search" type="button">Search</button>
+      <button class="nav-item active" data-page="dashboard" type="button">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5 10v10h14V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="records" type="button">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M8 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>All Records</span>
+      </button>
+      <button class="nav-item" data-page="add" type="button">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Add Alumni</span>
+      </button>
+      <button class="nav-item" data-page="search" type="button">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Search</span>
+      </button>
     </nav>
 
     <div class="sidebar-footer">
-      <span id="connectionDot" class="connection-dot is-pending"></span>
-      <span>alumni_db · MySQL</span>
+      <div class="db-status-pill">
+        <div class="db-status-main">
+          <span id="connectionDot" class="connection-dot is-connected"></span>
+          <span>Connected</span>
+        </div>
+        <div class="db-status-sub">alumni_db · Supabase</div>
+      </div>
+
+      <div class="account-row">
+        <div id="userAvatar" class="user-avatar">A</div>
+        <div id="userEmailDisplay" class="user-email-display">staff@example.com</div>
+        <button id="accountMenuBtn" class="account-menu-btn" type="button" aria-label="Open account menu" aria-expanded="false">
+          <span aria-hidden="true">···</span>
+        </button>
+        <div id="accountDropdown" class="account-dropdown hidden">
+          <button id="signOutBtn" class="account-dropdown-item" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
     </div>
   </aside>
 
@@ -33,6 +84,7 @@
     <header class="topbar">
       <div id="topbarTitle" class="topbar-title">Dashboard</div>
       <div class="topbar-actions">
+        <span id="userEmail" style="font-size:13px; color: var(--text-muted); margin-right: 12px;"></span>
         <input id="globalSearch" class="input global-search" type="search" placeholder="Global search" />
       </div>
     </header>
@@ -296,6 +348,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-client.js"></script>
   <script src="app-new.js"></script>
 </body>
 </html>
