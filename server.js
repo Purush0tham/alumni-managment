@@ -298,9 +298,14 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
-app.use('/api', (req, res) => {
-  res.status(404).json({ error: 'API endpoint not found' });
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`\nAlumni Management System`);
+    console.log(`   -> http://localhost:${PORT}\n`);
+  });
+}
+
+module.exports = app;
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
