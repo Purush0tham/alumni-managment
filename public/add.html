@@ -70,20 +70,30 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="f_course">Course <span class="required">*</span></label>
-            <input type="text" id="f_course" class="form-input" placeholder="e.g. BCA, MCA, B.Tech" list="courseList" />
-            <datalist id="courseList">
-              <option value="BCA">
-              <option value="MCA">
-              <option value="BCA-AI">
-              <option value="B.Tech">
-              <option value="M.Tech">
-              <option value="B.Sc">
-              <option value="M.Sc">
-              <option value="BBA">
-              <option value="MBA">
-            </datalist>
-          </div>
+  <label class="form-label" for="f_course">
+    Course <span class="required">*</span>
+  </label>
+
+  <select id="f_course" class="form-input">
+    <option value="">Select Course</option>
+    <option value="BCA">BCA</option>
+    <option value="MCA">MCA</option>
+    <option value="B.Tech">B.Tech</option>
+    <option value="M.Tech">M.Tech</option>
+    <option value="BSc">BSc</option>
+    <option value="MBA">MBA</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label class="form-label" for="f_department">
+    Department <span class="required">*</span>
+  </label>
+
+  <select id="f_department" class="form-input">
+    <option value="">Select Department</option>
+  </select>
+</div>
 
           <div class="form-group">
             <label class="form-label" for="f_year">Graduation Year <span class="required">*</span></label>
