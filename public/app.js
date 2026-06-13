@@ -13,7 +13,7 @@ const chartColors = [
   "--chart-4",
   "--chart-5",
   "--chart-6"
-];
+];  
 
 const pageTitles = {
   dashboard: "Dashboard",

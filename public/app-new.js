@@ -6,11 +6,48 @@
 // ===== DATA STRUCTURES =====
 
 const DEPARTMENT_MAP = {
-  BE: ['Computer Science Engineering (CSE)', 'Artificial Intelligence & Machine Learning (AIML)', 'Information Science Engineering (ISE)', 'Electronics & Communication Engineering (ECE)', 'Electrical & Electronics Engineering (EEE)', 'Mechanical Engineering', 'Civil Engineering'],
-  BTech: ['Computer Science Engineering (CSE)', 'Artificial Intelligence & Machine Learning (AIML)', 'Information Science Engineering (ISE)', 'Electronics & Communication Engineering (ECE)', 'Electrical & Electronics Engineering (EEE)', 'Mechanical Engineering', 'Civil Engineering'],
-  MTech: ['Computer Science', 'AI & ML', 'Data Science', 'VLSI Design', 'Structural Engineering'],
-  MCA: ['Computer Applications'],
-  MBA: ['Finance', 'Marketing', 'Human Resources', 'Business Analytics']
+  BE: [
+    'Computer Science Engineering (CSE)',
+    'Artificial Intelligence & Machine Learning (AIML)',
+    'Information Science Engineering (ISE)',
+    'Electronics & Communication Engineering (ECE)',
+    'Electrical & Electronics Engineering (EEE)',
+    'Mechanical Engineering',
+    'Civil Engineering'
+  ],
+
+  BTech: [
+    'Computer Science Engineering (CSE)',
+    'Artificial Intelligence & Machine Learning (AIML)',
+    'Information Science Engineering (ISE)',
+    'Electronics & Communication Engineering (ECE)',
+    'Electrical & Electronics Engineering (EEE)',
+    'Mechanical Engineering',
+    'Civil Engineering'
+  ],
+
+  BSc: [
+    'Cyber Security'
+  ],
+
+  MTech: [
+    'Computer Science',
+    'AI & ML',
+    'Data Science',
+    'VLSI Design',
+    'Structural Engineering'
+  ],
+
+  MCA: [
+    'Computer Applications'
+  ],
+
+  MBA: [
+    'Finance',
+    'Marketing',
+    'Human Resources',
+    'Business Analytics'
+  ]
 };
 
 const GRADUATION_YEARS = Array.from({ length: 16 }, (_, i) => 2020 + i);
